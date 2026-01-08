@@ -1,4 +1,6 @@
-﻿namespace QuizBattle.Console;
+﻿using QuizBattle.Domain;
+
+namespace QuizBattle.Console;
 
 public class QuizUtils
 {

@@ -1,4 +1,4 @@
-﻿namespace QuizBattle.Console;
+﻿namespace QuizBattle.Domain;
 
 public  class Question
 {
