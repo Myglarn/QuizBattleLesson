@@ -9,12 +9,27 @@ public class QuestionTests
     {
         try
         {
-            var question = new Question(null!, null!, null!);
+            var question = new Question(null!, null!, null!, null!);
             Assert.Fail("Expected to throw DomainException with null parameters.");
         }
-        catch(DomainException ex)
+        catch(DomainException){ }
+    }
+
+    [Fact]
+    public void QuestionChoices_LessThanThree_ThrowsDomainException()
+    {
+
+        try
         {
-            Console.WriteLine("Correct exception: ", ex.Message);
+            var question = new Question(
+                "Q1",
+                "Question",
+                new Choice[] { },
+                ""
+                );
+            Assert.Fail("Must throw when less than three choices");
+
         }
+        catch(DomainException) { }
     }
 }
