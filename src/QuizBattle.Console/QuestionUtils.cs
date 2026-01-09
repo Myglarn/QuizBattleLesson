@@ -1,42 +1,20 @@
-﻿using static System.Console;
+﻿using QuizBattle.Console.Extensions;
 using QuizBattle.Domain;
+using static System.Console;
 
 namespace QuizBattle.Console;
 
 public class QuestionUtils
 {
-    public static bool IsCompleted()
+    public static void DisplayQuestion(Question question, int number)
     {
-        throw new NotImplementedException();
-    }
+        System.Console.WriteLine($"Fråga {number}: {question.Text}");
 
-    public static void DisplayQuestion()
-    {
-        System.Console.WriteLine("Hur många ben har en apa? ");
-    }
-
-    public static int GetAnswer()
-    {
-        const int maxCount = 4;
-
-        int pick;
-
-        while (!int.TryParse(System.Console.ReadLine(), out pick) || pick < 1 || pick > maxCount)
+        for (int i = 0; i < question.Choices.Count; i++)
         {
-            System.Console.Write("Ogiltigt val. Försök igen: ");
+            var choice = question.Choices[i];
+            System.Console.WriteLine($"  {i + 1}. {choice.Text}");
         }
-
-        return pick;
-    }
-
-    public static void CheckAnswer(int answer)
-    {
-        // Do nothing
-    }
-
-    public static void WriteStatus()
-    {
-        // Do nothing
     }
 
     public static List<Question> SeedQuestions()
@@ -44,7 +22,7 @@ public class QuestionUtils
         return new List<Question>
             {
                 new Question(
-                    text: "Q.CS.001", "Vad gör 'using'-statement i C#?",
+                    "Q.CS.001", "Vad gör 'using'-statement i C#?",
                     choices: new Choice[]
                     {
                         new Choice("Q.CS.001.A","Skapar en ny tråd"),
@@ -71,7 +49,21 @@ public class QuestionUtils
                         new Choice("Q.OOP.011.B","Ärva från flera basklasser"),
                         new Choice("Q.OOP.011.C","Skapa statiska metoder")
                     },
-                    "Q.OOP.011.A", category: "OOP", difficulty: 1)
+                    "Q.OOP.011.A")
             };
+    }
+
+    public static int PromptForAnswer(Question question)
+    {
+        System.Console.Write("Ditt svar (1-" + question.ChoicesCount() + "): ");
+
+        int pick;
+
+        while (!int.TryParse(System.Console.ReadLine(), out pick) || pick < 1 || pick > question.ChoicesCount())
+        {
+            System.Console.Write("Ogiltigt val. Försök igen: ");
+        }
+
+        return pick;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using QuizBattle.Console;
+using QuizBattle.Console.Extensions;
 using QuizBattle.Domain;
 
 var repo = new InMemoryQuestionRepository();
@@ -19,12 +20,20 @@ var asked = 0;
 foreach (Question question in questions.Take(3))
 {
     asked++;
-    QuestionUtils.DisplayQuestion();
-    int answer = QuestionUtils.GetAnswer();
+    QuestionUtils.DisplayQuestion(question, asked);
 
-    QuestionUtils.CheckAnswer(answer);
+    int pick = QuestionUtils.PromptForAnswer(question);
 
-    QuestionUtils.WriteStatus();
+    var selected = question.ChoiceAt(pick - 1).Code;
+    var correct = question.IsCorrect(selected);
+
+    Console.WriteLine(correct ? "✔ Rätt!" : "✖ Fel.");
+
+    if (correct) score++;
+
+    Console.WriteLine();
 }
 
-Console.WriteLine("Tack för att du spelade Quiz Battle!");
+Console.WriteLine($"Klart! Poäng: {score}/{asked}");
+Console.WriteLine("Tryck valfri tangent för att avsluta..."); 
+Console.ReadKey(true);
