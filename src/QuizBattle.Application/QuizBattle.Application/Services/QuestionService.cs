@@ -1,14 +1,13 @@
-﻿
-using static System.Console;
-using System.Collections.Generic;
-using System.Linq;
-using QuizBattle.Console.Extensions;
+﻿using QuizBattle.Application.Interfaces;
 using QuizBattle.Domain;
-using QuizBattle.Application.Interfaces;
 
-namespace QuizBattle.Console
+namespace QuizBattle.Application.Services
 {
-    public class QuestionService : IQuestionService
+    /// <summary>
+    /// Tjänst för att hämta frågor via IQuestionRepository.
+    /// Innehåller ingen UI (ingen Console, inga statuskoder).
+    /// </summary>
+    public sealed class QuestionService : IQuestionService
     {
         private readonly IQuestionRepository _repository;
 
@@ -18,10 +17,46 @@ namespace QuizBattle.Console
             EnsureValid();
         }
 
+        public async Task<Question> GetRandomQuestionAsync(
+            string? category = null,
+            int? difficulty = null,
+            CancellationToken ct = default)
+        {
+            var questions = await _repository.GetRandomAsync(category, difficulty, 1, ct);
+            if (questions is null || questions.Count == 0)
+                throw new DomainException("Kunde inte hämta en slumpad fråga.");
+
+            return questions[0];
+        }
+
+        public async Task<IReadOnlyList<Question>> GetRandomQuestionsAsync(
+            int count,
+            string? category = null,
+            int? difficulty = null,
+            CancellationToken ct = default)
+        {
+            if (count <= 0)
+                throw new ArgumentOutOfRangeException(nameof(count), "Count måste vara > 0.");
+
+            var questions = await _repository.GetRandomAsync(category, difficulty, count, ct);
+            if (questions is null || questions.Count != count)
+                throw new DomainException($"Kunde inte hämta exakt {count} slumpade frågor.");
+
+            return questions;
+        }
+
+        public Task<Question?> GetByCodeAsync(string code, CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                throw new ArgumentException("Code får inte vara tomt.", nameof(code));
+
+            return _repository.GetByCodeAsync(code, ct);
+        }
+
         public async Task<Question> GetRandomQuestionAsync(CancellationToken ct = default)
         {
             var questions = await _repository.GetRandomAsync(
-                category: null, 
+                category: null,
                 difficulty: null,
                 1,
                 ct);
