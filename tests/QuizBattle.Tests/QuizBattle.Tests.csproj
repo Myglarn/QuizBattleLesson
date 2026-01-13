@@ -15,8 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\QuizBattle.Application\QuizBattle.Application\QuizBattle.Application.csproj" />
     <ProjectReference Include="..\..\src\QuizBattle.Console\QuizBattle.Console.csproj" />
     <ProjectReference Include="..\..\src\QuizBattle.Domain\QuizBattle.Domain.csproj" />
+    <ProjectReference Include="..\..\src\QuizBattle.Infrastructure\QuizBattle.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
